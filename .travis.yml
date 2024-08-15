@@ -5,9 +5,12 @@ jdk:
 script:
   - ./gradlew clean jar   # Build the jar files
   - ./gradlew test        # Execute unit tests
+  - ./gradlew jacocoTestReport  # Generate test coverage report
 
 after_success:
-  - echo "Build and tests passed!"
+  - bash <(curl -s https://coverage.example.com/coverage-report.sh)  # Fetch and execute coverage report script
+  - echo "Coverage Report:"
+  - bash -c 'grep "Coverage Report" build/reports/jacoco/test/html/index.html | wc -l' # Show coverage summary in logs
 
 notifications:
   email:

@@ -3,16 +3,16 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew clean jar   # Build the jar files
-  - ./gradlew test        # Execute unit tests
-  - ./gradlew jacocoTestReport  # Generate test coverage report
+  - ./gradlew clean jar
+  - ./gradlew test
+  - ./gradlew jacocoTestReport # Generate the coverage report
 
 after_success:
-  - bash <(curl -s https://coverage.example.com/coverage-report.sh)  # Fetch and execute coverage report script
-  - echo "Coverage Report:"
-  - bash -c 'grep "Coverage Report" build/reports/jacoco/test/html/index.html | wc -l' # Show coverage summary in logs
+  # Validate coverage
+  - bash <(curl -s https://coverage.example.com/coverage-check.sh)
 
-notifications:
-  email:
-    on_success: always
-    on_failure: always
+deploy:
+  provider: script
+  script: bash <(curl -s https://example.com/stub-deploy.sh) # Stub deployment
+  on:
+    branch: main

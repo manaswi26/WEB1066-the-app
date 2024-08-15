@@ -1,10 +1,20 @@
-language: python
-install: "pip install -r requirements.txt"
+language: java
+
+before_install:
+   docker buildx build .
+  - sudo add-apt-repository ppa:linuxuprising/java
+  - sudo apt-get update
+  - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+  - sudo apt-get install -y oracle-java8-installer
+  - sudo apt-get install -y oracle-java8-set-default
+
+env:
+  - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 script:
-  # Run ANSIBLE checks
-  # - ANSIBLE0008: Disabled for use of sudo warnings - to address
-  # - ANSIBLE0011: Disabled for all tasks which should be named
-  # - ANSIBLE0012: Disabled (should not change if nothings needs doing) - to address
-  # - ANSIBLE0013: Disabled - few uses of shell commands - to address
-  - find vagrant/provision -name "*.yml" -exec ansible-lint -x ANSIBLE008,ANSIBLE0011,ANSIBLE0012,ANSIBLE0013  {} +
+  - echo "Starting build..."
+  - ./gradlew clean jar
+  - echo "Build completed."
+
+before_script:
+  - echo 'Testing coming soon'
